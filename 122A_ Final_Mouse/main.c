@@ -17,6 +17,7 @@
 #include "task.h" 
 #include "croutine.h"
 enum MOVEMOUSE {INIT,waitStart,check,left,right,turnAround,forward,turnWait,forwardWait} moveMouse;
+enum EMITLIGHT {INITEmit, on, off} emitLight;
 //enum TRACKDATA {INITTrack, setData, send, wait } trackData;
 //char where = "";
 //int mat[16][16] = 0;
@@ -59,6 +60,9 @@ void MOVE_Init(){
 void TRACK_Init(){
 	trackData = INITTrack;
 }*/
+void EMIT_Init(){
+	emitLight = INITEmit;
+}
 
 void MOVE_Tick(){
 	//Actions
@@ -78,39 +82,6 @@ void MOVE_Tick(){
 			}*/
 			break;
 		case check:  ;
-			int adcL = adc_read(0);		// read adc value at PA0
-			int adcR = adc_read(1);		// read adc value at PA1
-			int adcF = adc_read(2);		// read adc value at PA2
-			/*adcL = ADC; //get left adc value
-			adcR = ADC; //get right ac value
-			adcF = ADC; //get forward adc value
-			
-			
-			if(adcL < 1024 && adcR < 1024 && adcF < 1024){  // all walls empty
-				rand % 3; // 3 options
-			}
-			else if(adcL < 1024 && adcR < 1024){  // left and right wall empty
-				rand % 2; // 2 options
-			}
-			else if(adcL < 1024 && adcF < 1024){  // left and front wall empty
-				rand % 2; // 2 options
-			}
-			else if(adcR < 1024 && adcF < 1024){  // right and front wall empty
-				rand % 2; // 2 options
-			}
-			else if(adcL < 1024){  // left wall empty
-			
-			}
-			else if(adcR < 1024){  // right wall empty
-			
-			}
-			else if(adcF < 1024){  // front wall empty
-				where = "forward";
-			}
-			else{  // turn around
-			
-			}*/
-			
 			
 			break;
 		case left:  // turn left
@@ -149,6 +120,43 @@ void MOVE_Tick(){
 			moveMouse = forward;
 			break;
 		case check: ;
+			int adcL = adc_read(0);		// read adc value at PA0
+			int adcR = adc_read(1);		// read adc value at PA1
+			int adcF = adc_read(2);		// read adc value at PA2
+			/*adcL = ADC; //get left adc value
+			adcR = ADC; //get right ac value
+			adcF = ADC; //get forward adc value
+			
+			
+			if(adcL < 1024 && adcR < 1024 && adcF < 1024){  // all walls empty
+				rand % 3; // 3 options
+			}
+			else if(adcL < 1024 && adcR < 1024){  // left and right wall empty
+				rand % 2; // 2 options
+			}
+			else if(adcL < 1024 && adcF < 1024){  // left and front wall empty
+				rand % 2; // 2 options
+			}
+			else if(adcR < 1024 && adcF < 1024){  // right and front wall empty
+				rand % 2; // 2 options
+			}
+			else if(adcL < 1024){  // left wall empty
+			
+			}
+			else if(adcR < 1024){  // right wall empty
+			
+			}
+			else if(adcF < 1024){  // front wall empty
+				where = "forward";
+			}
+			else{  // turn around
+			
+			}*/
+			
+			
+		
+		
+		
 			int r = rand()%3;
 			if(r == 0){
 				moveMouse = left;
@@ -213,6 +221,23 @@ void TRACK_Tick(){
 	}	
 }
 */
+
+void EMIT_Tick(){
+	switch(emitLight){
+		case INITEmit:
+			emitLight = on;
+			break;
+		case on:
+			PORTA = (PORTA & 0x8F) | 0x70;
+			emitLight = off;
+			break;
+		case off:
+			PORTA  = (PORTA & 0x8F) | 0x00;
+			emitLight = on;
+			break;
+	}
+	
+}
 void MoveSecTask()
 {
 	MOVE_Init();
@@ -221,6 +246,14 @@ void MoveSecTask()
 	MOVE_Tick();
 	vTaskDelay(200); 
    } 
+}
+
+void EmitSecTask(){
+	EMIT_Init();
+	for(;;){
+		EMIT_Tick();
+		vTaskDelay(100);
+	}
 }
 /*
 void TrackSecTask(){
@@ -235,11 +268,12 @@ void StartSecPulse(unsigned portBASE_TYPE Priority)
 {
 	xTaskCreate(MoveSecTask, (signed portCHAR *)"MoveSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
 	//xTaskCreate(TrackSecTask, (signed portCHAR *)"TrackSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
+	xTaskCreate(EmitSecTask, (signed portCHAR *)"EmitSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
 }	
  
 int main(void) 
 { 
-   DDRA = 0x00; PORTA=0xFF;
+   DDRA = 0xF0; PORTA=0xFF;
    DDRC = 0xFF; 
    DDRD = 0xFF;
    //Start Tasks  
