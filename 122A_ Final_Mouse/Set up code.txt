@@ -9,17 +9,15 @@
 #include <avr/eeprom.h> 
 #include <avr/portpins.h> 
 #include <avr/pgmspace.h> 
-#include <time.h>
-
  
 //FreeRTOS include files 
 #include "FreeRTOS.h" 
 #include "task.h" 
 #include "croutine.h"
-enum MOVEMOUSE {INIT,waitStart,check,left,right,turnAround,forward,turnWait,forwardWait} moveMouse;
-//enum TRACKDATA {INITTrack, setData, send, wait } trackData;
-//char where = "";
-//int mat[16][16] = 0;
+enum MOVEMOUSE {INIT, waitStart, check, left,right,turnAround,forward} moveMouse;
+enum TRACKDATA {INITTrack, setData, send, wait } trackData;
+char where = "";
+int mat[16][16] = 0;
 
 
 	
@@ -35,29 +33,27 @@ void ADC_init() {
 void MOVE_Init(){
 	moveMouse = INIT;
 }
-/*
+
 void TRACK_Init(){
 	trackData = INITTrack;
-}*/
+}
 
 void MOVE_Tick(){
 	//Actions
 	switch(moveMouse){
 		case INIT:
-			
-			//char where = "";
-			PORTC = 0x11;
+			int rand = 0;
 			break;
 		case waitStart:
-			/*while(adcF < 1024){
+			while(adcF < 1024){
 				adcF = ADC;
 			}
 			while(adcF > 1024){
 				adcF = ADC;
-			}*/
+			}
 			break;
 		case check:
-			/*adcL = ADC; //get left adc value
+			adcL = ADC; //get left adc value
 			adcR = ADC; //get right ac value
 			adcF = ADC; //get forward adc value
 			if(adcL < 1024 && adcR < 1024 && adcF < 1024){  // all walls empty
@@ -83,83 +79,46 @@ void MOVE_Tick(){
 			}
 			else{  // turn around
 			
-			}*/
-			
-			
+			}
 			break;
 		case left:  // turn left
-			//where = "left";
-			PORTC = 0x53;
+			where = "left";
 			break;
 		case right: // turn right
-			//where = "right;"
-			PORTC = 0x35;
+			where = "right;"
 			break;
 		case turnAround: // turn around
-			//where = "back";
+			where = "back";
 			break;
 		case forward: // move forward
-			PORTC = 0x33;
-			vTaskDelay(200);
+			
 			break;
-		case turnWait:
-			PORTC = 0x00;
-			vTaskDelay(200);
-			break;
-		case forwardWait:
-			PORTC = 0x00;	
-			vTaskDelay(200);
-			break;
-		//trackData = setData;
+		trackData = setData;
 	}
 	//Transitions
 	switch(moveMouse){
 		case INIT:
-			//moveMouse = waitStart;
-			moveMouse = forward;
+			moveMouse = waitStart;
 			break;
 		case waitStart:
-			//moveMouse = check;
-			moveMouse = forward;
-			break;
-		case check:
-			srand(time(0));
-			int r = rand()%3;
-			if(r == 0){
-				moveMouse = left;
-			}
-			else if(r == 1){
-				moveMouse = right;
-			}
-			else{
-				moveMouse = forward;
-			}
+			moveMouse = check;
 			break;
 		case left:
-			moveMouse = turnWait;
-			//moveMouse = right;
+			moveMouse = forward;
 			break;
 		case right:
-			moveMouse = turnWait;
+			moveMouse = forward;
 			break;
 		case turnAround:
-			moveMouse = turnWait;
-			break;
-		case turnWait:
 			moveMouse = forward;
 			break;
 		case forward:
-			moveMouse = forwardWait;
-			//moveMouse = left;
-			break;
-		case forwardWait:
 			moveMouse = check;
 			break;
 		
 	}
 }
 
-/*
 void TRACK_Tick(){
 	//Actions
 	switch(trackData){
@@ -187,35 +146,35 @@ void TRACK_Tick(){
 			break;
 	}	
 }
-*/
+
 void MoveSecTask()
 {
 	MOVE_Init();
    for(;;) 
    { 	
 	MOVE_Tick();
-	vTaskDelay(200); 
+	vTaskDelay(100); 
    } 
 }
-/*
+
 void TrackSecTask(){
 	TRACK_Init();
 	for(;;){
 		TRACK_Tick();
 		vTaskDelay(100);	
 	}
-}*/
+}
 
 void StartSecPulse(unsigned portBASE_TYPE Priority)
 {
 	xTaskCreate(MoveSecTask, (signed portCHAR *)"MoveSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
-	//xTaskCreate(TrackSecTask, (signed portCHAR *)"TrackSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
+	xTaskCreate(TrackSecTask, (signed portCHAR *)"TrackSecTask", configMINIMAL_STACK_SIZE, NULL, Priority, NULL );
 }	
  
 int main(void) 
 { 
    DDRA = 0x00; PORTA=0xFF;
-   DDRC = 0xFF; 
+   DDRC = 0xF0; PORTC=0x0F;	
    DDRD = 0xFF;
    //Start Tasks  
    StartSecPulse(1);
