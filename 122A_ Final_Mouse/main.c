@@ -32,6 +32,26 @@ void ADC_init() {
 	//		 whenever the previous conversion completes
 }
 
+int adc_read(int ch)
+{
+	// select the corresponding channel 0~7
+	// ANDing with '7' will always keep the value
+	// of 'ch' between 0 and 7
+	ch &= 0b00000111;  // AND operation with 7
+	ADMUX = (ADMUX & 0xF8)|ch;     // clears the bottom 3 bits before ORing
+	
+	// start single conversion
+	// write '1' to ADSC
+	ADCSRA |= (1<<ADSC);
+	
+	// wait for conversion to complete
+	// ADSC becomes '0' again
+	// till then, run loop continuously
+	while(ADCSRA & (1<<ADSC));
+	
+	return (ADC);
+}
+
 void MOVE_Init(){
 	moveMouse = INIT;
 }
@@ -45,6 +65,7 @@ void MOVE_Tick(){
 	switch(moveMouse){
 		case INIT:
 			
+			srand(time(0));
 			//char where = "";
 			PORTC = 0x11;
 			break;
@@ -56,10 +77,15 @@ void MOVE_Tick(){
 				adcF = ADC;
 			}*/
 			break;
-		case check:
+		case check:  ;
+			int adcL = adc_read(0);		// read adc value at PA0
+			int adcR = adc_read(1);		// read adc value at PA1
+			int adcF = adc_read(2);		// read adc value at PA2
 			/*adcL = ADC; //get left adc value
 			adcR = ADC; //get right ac value
 			adcF = ADC; //get forward adc value
+			
+			
 			if(adcL < 1024 && adcR < 1024 && adcF < 1024){  // all walls empty
 				rand % 3; // 3 options
 			}
@@ -122,8 +148,7 @@ void MOVE_Tick(){
 			//moveMouse = check;
 			moveMouse = forward;
 			break;
-		case check:
-			srand(time(0));
+		case check: ;
 			int r = rand()%3;
 			if(r == 0){
 				moveMouse = left;
