@@ -24,7 +24,7 @@ int dir = 100;
 int data[4][4] = {0};
 int j, k = 0;
 int sendValue = 0;
-int flag1, flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, flag10, flag11, flag12, flag13, flag14, flag15, flag16 = 0;
+int flag2, flag3, flag4, flag5, flag6, flag7, flag8, flag9, flag10, flag11, flag12, flag13, flag14, flag15, flag16 = 0;
 
 volatile unsigned char ADC_Flag = 0;
 
@@ -264,68 +264,64 @@ void TRACK_Tick(){
 			break;
 		case send:  // USART send new change
 			//check each value in matrix and add to the send value if it hasn't already been added to.
-			if(data[0][0] == 1 && flag1 == 0){
-				sendValue += 1;
-				flag1 = 1;
-			}
-			else if(data[0][1] == 1 && flag2 == 0){
-				sendValue += 2;
+			if(data[0][1] == 1 && flag2 == 0){
+				sendValue = 1;
 				flag2 = 1;
 			}
 			else if(data[0][2] == 1 && flag3 == 0){
-				sendValue += 3;
+				sendValue = 2;
 				flag3 = 1;
 			}
 			else if(data[0][3] == 1 && flag4 == 0){
-				sendValue += 4;
+				sendValue = 3;
 				flag4 = 1;
 			}
 			else if(data[1][0] == 1 && flag5 == 0){
-				sendValue += 5;
+				sendValue = 4;
 				flag5 = 1;
 			}
 			else if(data[1][1] == 1 && flag6 == 0){
-				sendValue += 6;
+				sendValue = 5;
 				flag6 = 1;
 			}
 			else if(data[1][2] == 1 && flag7 == 0){
-				sendValue += 7;
+				sendValue = 6;
 				flag7 = 1;
 			}
 			else if(data[1][3] == 1 && flag8 == 0){
-				sendValue += 8;
+				sendValue = 7;
 				flag8 = 1;
 			}
 			else if(data[2][0] == 1 && flag9 == 0){
-				sendValue += 9;
+				sendValue = 8;
 				flag9 = 1;
 			}
 			else if(data[2][1] == 1 && flag10 == 0){
-				sendValue += 10;
+				sendValue = 9;
 				flag10 = 1;
 			}
 			else if(data[2][2] == 1 && flag11 == 0){
-				sendValue += 11;
+				sendValue = 10;
 				flag11 = 1;
 			}
 			else if(data[2][3] == 1 && flag12 == 0){
-				sendValue += 12;
+				sendValue = 11;
 				flag12 = 1;
 			}
 			else if(data[3][0] == 1 && flag13 == 0){
-				sendValue += 13;
+				sendValue = 12;
 				flag13 = 1;
 			}
 			else if(data[3][1] == 1 && flag14 == 0){
-				sendValue += 14;
+				sendValue = 13;
 				flag14 = 1;
 			}
 			else if(data[3][2] == 1 && flag15 == 0){
-				sendValue += 15;
+				sendValue = 14;
 				flag15 = 1;
 			}
 			else if(data[3][3] == 1 && flag16 == 0){
-				sendValue += 16;
+				sendValue = 15;
 				flag16 = 1;
 			}
 			
