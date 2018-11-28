@@ -349,7 +349,7 @@ void TRACK_Tick(){
 			trackData = wait;
 			break;
 		case wait:
-			trackData = wait;
+			trackData = send;
 			break;
 	}	
 }

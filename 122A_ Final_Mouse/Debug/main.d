@@ -21,6 +21,7 @@ main.d main.o: .././main.c \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\eeprom.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h \
+ .././usart.h \
  C:\Users\Bejabbers\Desktop\FreeRTOS\FreeRTOS\Source\include/FreeRTOS.h \
  C:\Users\Bejabbers\Desktop\FreeRTOS\FreeRTOS\Source\include/projdefs.h \
  C:\Users\Bejabbers\Desktop\FreeRTOS\FreeRTOS\Source/FreeRTOSConfig.h \
@@ -74,6 +75,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h:
+
+.././usart.h:
 
 C:\Users\Bejabbers\Desktop\FreeRTOS\FreeRTOS\Source\include/FreeRTOS.h:
 
